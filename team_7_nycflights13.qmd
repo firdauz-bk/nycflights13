@@ -342,6 +342,40 @@ LIMIT 10;
 
 ### 4.4
 
+### 4.5
+```{sql}
+#| connection: con_nycflights13
+WITH burlington_flights AS (
+    SELECT
+        f.origin,
+        f.air_time,
+        CASE
+            WHEN w.wind_dir BETWEEN 135 AND 225 THEN 'South'
+            WHEN w.wind_dir BETWEEN 0 AND 45 OR w.wind_dir BETWEEN 315 AND 360 THEN 'North'
+            ELSE NULL
+        END AS wind_direction
+    FROM
+        flights f
+    JOIN
+        weather w ON f.origin = w.origin
+    WHERE
+        f.dest = 'BTV'
+)
+SELECT
+    wind_direction,
+    AVG(air_time) AS mean_air_time
+FROM
+    burlington_flights
+WHERE
+    wind_direction IS NOT NULL
+GROUP BY
+    wind_direction
+    
+LIMIT 10;
+
+
+```
+
 ## Task 5: Finalising the submission
 
 ### 5.1 Commit and push changes to github

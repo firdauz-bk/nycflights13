@@ -9,7 +9,7 @@
 <meta name="author" content="Chan Jit Lin, Firdauz B K, Celeste Tan, Lin Xiang Hong, Jonathan Chua">
 <meta name="dcterms.date" content="2024-05-28">
 
-<title>NYCFlights13 lab week 4 team 7</title>
+<title>nycflights13 lab week 4 team 7</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3105,6 +3105,7 @@ vertical-align: -.125em;
   <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10">4.2</a></li>
   <li><a href="#section-11" id="toc-section-11" class="nav-link" data-scroll-target="#section-11">4.3</a></li>
   <li><a href="#section-12" id="toc-section-12" class="nav-link" data-scroll-target="#section-12">4.4</a></li>
+  <li><a href="#section-13" id="toc-section-13" class="nav-link" data-scroll-target="#section-13">4.5</a></li>
   </ul></li>
   <li><a href="#task-5-finalising-the-submission" id="toc-task-5-finalising-the-submission" class="nav-link" data-scroll-target="#task-5-finalising-the-submission">Task 5: Finalising the submission</a>
   <ul class="collapse">
@@ -3112,9 +3113,6 @@ vertical-align: -.125em;
   <li><a href="#as-a-team-capture-a-screenshot-of-the-repository-owners-github-project-code-page-displaying-the-url-bar-the-nycflights13-data-folder-screenshot-images-and-most-importantly-the-team_xx_nycflights13.qmd-file-and-the-rendered-team_xx_nycflights13.html-file.-screenshot" id="toc-as-a-team-capture-a-screenshot-of-the-repository-owners-github-project-code-page-displaying-the-url-bar-the-nycflights13-data-folder-screenshot-images-and-most-importantly-the-team_xx_nycflights13.qmd-file-and-the-rendered-team_xx_nycflights13.html-file.-screenshot" class="nav-link" data-scroll-target="#as-a-team-capture-a-screenshot-of-the-repository-owners-github-project-code-page-displaying-the-url-bar-the-nycflights13-data-folder-screenshot-images-and-most-importantly-the-team_xx_nycflights13.qmd-file-and-the-rendered-team_xx_nycflights13.html-file.-screenshot">5.2 As a team, capture a screenshot of the repository owner’s GitHub project Code page, displaying the URL bar, the nycflights13 data folder, screenshot images, and most importantly, the team_XX_nycflights13.qmd file and the rendered team_XX_nycflights13.html file. screenshot</a></li>
   <li><a href="#submit-zip-file" id="toc-submit-zip-file" class="nav-link" data-scroll-target="#submit-zip-file">5.3 Submit zip file</a></li>
   </ul></li>
-  <li><a href="#we-need-to-use-rank" id="toc-we-need-to-use-rank" class="nav-link" data-scroll-target="#we-need-to-use-rank">We need to use rank</a></li>
-  <li><a href="#use-case" id="toc-use-case" class="nav-link" data-scroll-target="#use-case">use case</a></li>
-  <li><a href="#use-group-by" id="toc-use-group-by" class="nav-link" data-scroll-target="#use-group-by">use group by</a></li>
   </ul>
 </nav>
 </div>
@@ -3122,7 +3120,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">NYCFlights13 lab week 4 team 7</h1>
+<h1 class="title">nycflights13 lab week 4 team 7</h1>
 </div>
 
 
@@ -3230,7 +3228,8 @@ vertical-align: -.125em;
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    num_destinations,</span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rank</span></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ranked_airports</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">rank</span>, airport_code;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">rank</span>, airport_code</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">4</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>3 records</caption>
@@ -3298,10 +3297,11 @@ vertical-align: -.125em;
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ranked_destinations rd</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> airports a <span class="kw">ON</span> rd.airport_code <span class="op">=</span> a.faa</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> rd.<span class="fu">rank</span> <span class="op">&lt;=</span> <span class="dv">10</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rd.<span class="fu">rank</span>, rd.airport_code;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> rd.<span class="fu">rank</span>, rd.airport_code</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">4</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
-<caption>Displaying records 1 - 10</caption>
+<caption>4 records</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">airport_code</th>
@@ -3334,42 +3334,6 @@ vertical-align: -.125em;
 <td style="text-align: left;">Charlotte Douglas Intl</td>
 <td style="text-align: right;">2201151</td>
 <td style="text-align: right;">4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ATL</td>
-<td style="text-align: left;">Hartsfield Jackson Atlanta Intl</td>
-<td style="text-align: right;">2103603</td>
-<td style="text-align: right;">5</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">FLL</td>
-<td style="text-align: left;">Fort Lauderdale Hollywood Intl</td>
-<td style="text-align: right;">2081712</td>
-<td style="text-align: right;">6</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ORD</td>
-<td style="text-align: left;">Chicago Ohare Intl</td>
-<td style="text-align: right;">1732559</td>
-<td style="text-align: right;">7</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">IAH</td>
-<td style="text-align: left;">George Bush Intercontinental</td>
-<td style="text-align: right;">1216724</td>
-<td style="text-align: right;">8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">DEN</td>
-<td style="text-align: left;">Denver Intl</td>
-<td style="text-align: right;">1206507</td>
-<td style="text-align: right;">9</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">TPA</td>
-<td style="text-align: left;">Tampa Intl</td>
-<td style="text-align: right;">1153529</td>
-<td style="text-align: right;">10</td>
 </tr>
 </tbody>
 </table>
@@ -3416,7 +3380,9 @@ vertical-align: -.125em;
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    mean_dep_delay</span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rank</span>,</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    airport_code;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    airport_code</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">4</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>3 records</caption>
@@ -3484,10 +3450,12 @@ vertical-align: -.125em;
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    on_time_stats</span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    hour_of_day;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    hour_of_day</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">4</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
-<caption>Displaying records 1 - 10</caption>
+<caption>4 records</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">hour_of_day</th>
@@ -3510,30 +3478,6 @@ vertical-align: -.125em;
 <tr class="even">
 <td style="text-align: left;">8</td>
 <td style="text-align: right;">73.23</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">9</td>
-<td style="text-align: right;">72.19</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">10</td>
-<td style="text-align: right;">68.73</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">11</td>
-<td style="text-align: right;">66.50</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">12</td>
-<td style="text-align: right;">61.63</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">13</td>
-<td style="text-align: right;">56.21</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">14</td>
-<td style="text-align: right;">53.19</td>
 </tr>
 </tbody>
 </table>
@@ -3571,7 +3515,8 @@ vertical-align: -.125em;
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    pac.tailnum <span class="op">=</span> p.tailnum</span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    p.tailnum;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    p.tailnum</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>Displaying records 1 - 10</caption>
@@ -3672,12 +3617,168 @@ vertical-align: -.125em;
 </section>
 <section id="section-10" class="level3">
 <h3 class="anchored" data-anchor-id="section-10">4.2</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> nyc_airports <span class="kw">AS</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        faa, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        name</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        airports</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        faa <span class="kw">IN</span> (<span class="st">&#39;JFK&#39;</span>, <span class="st">&#39;LGA&#39;</span>, <span class="st">&#39;EWR&#39;</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>flights_weather <span class="kw">AS</span> (</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        f.origin, </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        f.dep_delay,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        w.precip</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        flights f</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        weather w </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        f.origin <span class="op">=</span> w.origin </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">AND</span> f.<span class="dt">year</span> <span class="op">=</span> w.<span class="dt">year</span> </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">AND</span> f.<span class="dt">month</span> <span class="op">=</span> w.<span class="dt">month</span> </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">AND</span> f.<span class="dt">day</span> <span class="op">=</span> w.<span class="dt">day</span> </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="kw">AND</span> f.<span class="kw">hour</span> <span class="op">=</span> w.<span class="kw">hour</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    a.faa <span class="kw">AS</span> airport_code,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    a.name <span class="kw">AS</span> airport_name,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span> </span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">WHEN</span> fw.precip <span class="op">=</span> <span class="dv">0</span> <span class="cf">THEN</span> <span class="kw">TRUE</span> </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">ELSE</span> <span class="kw">FALSE</span> </span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span> <span class="kw">AS</span> is_dry,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ROUND</span>(</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> fw.dep_delay <span class="op">&lt;=</span> <span class="dv">0</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>):<span class="ch">:numeric</span> <span class="op">/</span> <span class="fu">COUNT</span>(fw.dep_delay)) <span class="op">*</span> <span class="dv">100</span>, </span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">AS</span> on_time_percentage</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> </span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    nyc_airports a</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> </span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    flights_weather fw </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="kw">ON</span> </span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    a.faa <span class="op">=</span> fw.origin</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    a.faa, </span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    a.name, </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    is_dry</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> </span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    a.faa, </span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    is_dry</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>6 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">airport_code</th>
+<th style="text-align: left;">airport_name</th>
+<th style="text-align: left;">is_dry</th>
+<th style="text-align: right;">on_time_percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">EWR</td>
+<td style="text-align: left;">Newark Liberty Intl</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">37.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EWR</td>
+<td style="text-align: left;">Newark Liberty Intl</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">56.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">JFK</td>
+<td style="text-align: left;">John F Kennedy Intl</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">44.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">JFK</td>
+<td style="text-align: left;">John F Kennedy Intl</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">62.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LGA</td>
+<td style="text-align: left;">La Guardia</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">43.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LGA</td>
+<td style="text-align: left;">La Guardia</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">66.88</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 <section id="section-11" class="level3">
 <h3 class="anchored" data-anchor-id="section-11">4.3</h3>
 </section>
 <section id="section-12" class="level3">
 <h3 class="anchored" data-anchor-id="section-12">4.4</h3>
+</section>
+<section id="section-13" class="level3">
+<h3 class="anchored" data-anchor-id="section-13">4.5</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> burlington_flights <span class="kw">AS</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        f.origin,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        f.air_time,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">CASE</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">WHEN</span> w.wind_dir <span class="kw">BETWEEN</span> <span class="dv">135</span> <span class="kw">AND</span> <span class="dv">225</span> <span class="cf">THEN</span> <span class="st">&#39;South&#39;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">WHEN</span> w.wind_dir <span class="kw">BETWEEN</span> <span class="dv">0</span> <span class="kw">AND</span> <span class="dv">45</span> <span class="kw">OR</span> w.wind_dir <span class="kw">BETWEEN</span> <span class="dv">315</span> <span class="kw">AND</span> <span class="dv">360</span> <span class="cf">THEN</span> <span class="st">&#39;North&#39;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">ELSE</span> <span class="kw">NULL</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">END</span> <span class="kw">AS</span> wind_direction</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        flights f</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        weather w <span class="kw">ON</span> f.origin <span class="op">=</span> w.origin</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        f.dest <span class="op">=</span> <span class="st">&#39;BTV&#39;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    wind_direction,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">AVG</span>(air_time) <span class="kw">AS</span> mean_air_time</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    burlington_flights</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    wind_direction <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    wind_direction</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>2 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">wind_direction</th>
+<th style="text-align: right;">mean_air_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">North</td>
+<td style="text-align: right;">46.44673</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">South</td>
+<td style="text-align: right;">46.50635</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 </section>
 <section id="task-5-finalising-the-submission" class="level2">
@@ -3694,15 +3795,6 @@ vertical-align: -.125em;
 <p>The Code tab in the GitHub repository showing one collaborator’s commit of adding the nycflights13 folder, Subtask 1.2.</p>
 <p>The Code tab in the GitHub repository showing the final commit, when finalizing your work, Step 2 of this section.</p>
 </section>
-</section>
-<section id="we-need-to-use-rank" class="level1">
-<h1>We need to use rank</h1>
-</section>
-<section id="use-case" class="level1">
-<h1>use case</h1>
-</section>
-<section id="use-group-by" class="level1">
-<h1>use group by</h1>
 </section>
 
 </main>
