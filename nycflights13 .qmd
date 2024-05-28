@@ -10,58 +10,34 @@ format:
     embed-resources: true
   
 ---
-
 ```{r}
 #| label: setup
 #| include: false
 library(DBI)
-library(nycflights13)
-library(psych)
-library(dplyr)
-library(lubridate)
-library(data.table)
-library(tidyverse)
-con_nycflights13 <- dbConnect(odbc::odbc(), dsn = "nycflights13")
+
 # database is called "nycflights13" in reality
+con_nycflights13 <- dbConnect(odbc::odbc(), dsn = "nycflights13")
 
 ```
+## Task 1
+```{sql, eval = FALSE}
+-- Import table for planes
+DROP TABLE IF EXISTS planes CASCADE;
+CREATE TABLE planes (
+    tailnum VARCHAR(255) PRIMARY KEY,
+    year INT,
+    type VARCHAR(255),
+    manufacturer VARCHAR(255),
+    model VARCHAR(255),
+    engines INT,
+    seats INT,
+    speed INT,
+    engine VARCHAR(255)
+);
 
-#### this database is about the flights that left new york in 2013
-![Relational diagram of the nycflights13 database](C:\Users\Chanj\OneDrive - Singapore Institute Of Technology\Areas\T3Y1\AAI1001 Data engineering and visualisation\github\titanic-for-data-eng-and-vis\nycflights13 practice week 3\images\relational.png)
-
-[Photo Reference](y.nz/joins.html#fig-flights-relationships)
-
-```{r}
-#| include: false
-flights <- data.table(nycflights13::flights)
-
-```
-
-#### checking that the primary keys are unique
-```{r}
-planes |> 
-  count(tailnum) |> 
-  filter(n > 1)
-
-weather |> 
-  count(time_hour, origin) |> 
-  filter(n > 1)
-describe(flights)
-
-```
-#### Checking that there are no missing values
-```{r}
-planes |> 
-  filter(is.na(tailnum))
-
-weather |> 
-  filter(is.na(time_hour) | is.na(origin))
-```
-#### After a little thinking and experimentation, we determined that there are three variables that together uniquely identify each flight:
-```{r}
-flights |> 
-  count(time_hour, carrier, flight) |> 
-  filter(n > 1)
+COPY planes
+FROM 'C:\Users\Chanj\OneDrive - Singapore Institute Of Technology\Areas\T3Y1\AAI1001 Data engineering and visualisation\week 4\nycflights13\data\planes.csv'
+CSV HEADER;
 ```
 
 
@@ -69,4 +45,6 @@ flights |>
 #We need to use rank
 #use case
 #use group by
+
+
 
