@@ -16,13 +16,13 @@ format:
 library(DBI)
 
 # database is called "nycflights13" in reality
-con_nycflights13 <- dbConnect(odbc::odbc(), dsn = "nycflights13")
-
+con_nycflights13 <- DBI::dbConnect(odbc::odbc(), dsn = "nycflights13")
 ```
 ## Task 1
 ### 1.1 Github  repo named [nycflights13](https://github.com/firdauz-bk/nycflights13)
 
-### 1.2 Insert ![screenshot](images/ss_q1p1.jpg)
+### 1.2 Insert Screenshot
+![screenshot](images/ss_q1p1.jpg)
 
 ### 1.3 flights db connected
 
@@ -48,37 +48,77 @@ FROM 'C:\Users\Chanj\OneDrive - Singapore Institute Of Technology\Areas\T3Y1\AAI
 CSV HEADER;
 ```
 
-## Task 2 Aggregating Information from the flights Table
+## Task 2: Aggregating Information from the flights Table
 
 ### 2.1 
+```{sql}
+#| connection: con_nycflights13
 
+
+```
 ### 2.2
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 2.3
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 2.4
+```{sql}
+#| connection: con_nycflights13
 
-## Task 3
+```
+## Task 3: 
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 3.1
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 3.2
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 3.3
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 3.4
+```{sql}
+#| connection: con_nycflights13
 
-## Task 4
+```
+## Task 4: 
 
 ### 4.1
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 4.2
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 4.3
+```{sql}
+#| connection: con_nycflights13
 
+```
 ### 4.4
+```{sql}
+#| connection: con_nycflights13
 
-## Task 5 Finalising the submission
+```
+## Task 5: Finalising the submission
 
 ### 5.1 Commit and push changes to github
 
