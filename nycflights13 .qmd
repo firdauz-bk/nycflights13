@@ -1,6 +1,6 @@
 ---
 title: "NYCFlights13 lab week 4 team 7"
-author: "Chan Jit Lin, Firdauz Bk, Celeste Tan, Lin Xiang Hong, Jonathan Chua"
+author: "Chan Jit Lin, Firdauz B K, Celeste Tan, Lin Xiang Hong, Jonathan Chua"
 date: "2024-05-28"
 format:
   html:
