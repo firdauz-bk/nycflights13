@@ -1,5 +1,5 @@
 ---
-title: "Practice on NYCFlights13 database"
+title: "NYCFlights13 lab week 4 team 7"
 author: "Chan Jit Lin, Firdauz Bk, Celeste Tan, Lin Xiang Hong, Jonathan Chua"
 date: "2024-05-28"
 format:
@@ -54,70 +54,64 @@ CSV HEADER;
 ```{sql}
 #| connection: con_nycflights13
 
+WITH nyc_airports AS (
+    SELECT DISTINCT origin
+    FROM flights
+    WHERE origin IN ('JFK', 'LGA', 'EWR')
+),
+dest_count AS (
+    SELECT
+        f.origin AS airport_code,
+        a.name AS airport_name,
+        COUNT(DISTINCT f.dest) AS num_destinations
+    FROM flights f
+    INNER JOIN airports a ON f.origin = a.faa
+    WHERE f.origin IN (SELECT origin FROM nyc_airports)
+    GROUP BY f.origin, a.name
+),
+ranked_airports AS (
+    SELECT
+        airport_code,
+        airport_name,
+        num_destinations,
+        RANK() OVER (ORDER BY num_destinations DESC, airport_code ASC) AS rank
+    FROM dest_count
+)
+SELECT
+    airport_code,
+    airport_name,
+    num_destinations,
+    rank
+FROM ranked_airports
+ORDER BY rank, airport_code;
 
 ```
 ### 2.2
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 2.3
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 2.4
-```{sql}
-#| connection: con_nycflights13
 
-```
 ## Task 3: 
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 3.1
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 3.2
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 3.3
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 3.4
-```{sql}
-#| connection: con_nycflights13
 
-```
 ## Task 4: 
 
 ### 4.1
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 4.2
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 4.3
-```{sql}
-#| connection: con_nycflights13
 
-```
 ### 4.4
-```{sql}
-#| connection: con_nycflights13
 
-```
 ## Task 5: Finalising the submission
 
 ### 5.1 Commit and push changes to github
