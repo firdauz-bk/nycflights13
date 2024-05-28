@@ -1,5 +1,5 @@
 ---
-title: "NYCFlights13 lab week 4 team 7"
+title: "nycflights13 lab week 4 team 7"
 author: "Chan Jit Lin, Firdauz B K, Celeste Tan, Lin Xiang Hong, Jonathan Chua"
 date: "2024-05-28"
 format:
@@ -92,8 +92,8 @@ SELECT
     num_destinations,
     rank
 FROM ranked_airports
-ORDER BY rank, airport_code;
-
+ORDER BY rank, airport_code
+LIMIT 4;
 ```
 ### 2.2
 Which ten destination airports are served by the greatest number of seats from New York City? If airports are tied for the tenth place, ensure that all tied airports are included in the output. Include columns for the following attributes:
@@ -132,7 +132,8 @@ SELECT
 FROM ranked_destinations rd
 INNER JOIN airports a ON rd.airport_code = a.faa
 WHERE rd.rank <= 10
-ORDER BY rd.rank, rd.airport_code;
+ORDER BY rd.rank, rd.airport_code
+LIMIT 4;
 
 ```
 
@@ -180,7 +181,9 @@ FROM
     mean_dep_delay
 ORDER BY
     rank,
-    airport_code;
+    airport_code
+    
+LIMIT 4;
 
 
 ```
@@ -219,8 +222,9 @@ SELECT
 FROM
     on_time_stats
 ORDER BY
-    hour_of_day;
-
+    hour_of_day
+    
+LIMIT 4;
 
 ```
 ### 2.5
@@ -258,8 +262,8 @@ JOIN
 ON
     pac.tailnum = p.tailnum
 ORDER BY
-    p.tailnum;
-
+    p.tailnum
+LIMIT 10;
 
 ```
 
@@ -279,6 +283,60 @@ ORDER BY
 ### 4.1
 
 ### 4.2
+```{sql}
+#| connection: con_nycflights13
+WITH nyc_airports AS (
+    SELECT 
+        faa, 
+        name
+    FROM 
+        airports
+    WHERE 
+        faa IN ('JFK', 'LGA', 'EWR')
+),
+flights_weather AS (
+    SELECT 
+        f.origin, 
+        f.dep_delay,
+        w.precip
+    FROM 
+        flights f
+    JOIN 
+        weather w 
+    ON 
+        f.origin = w.origin 
+        AND f.year = w.year 
+        AND f.month = w.month 
+        AND f.day = w.day 
+        AND f.hour = w.hour
+)
+SELECT 
+    a.faa AS airport_code,
+    a.name AS airport_name,
+    CASE 
+        WHEN fw.precip = 0 THEN TRUE 
+        ELSE FALSE 
+    END AS is_dry,
+    ROUND(
+        (SUM(CASE WHEN fw.dep_delay <= 0 THEN 1 ELSE 0 END)::numeric / COUNT(fw.dep_delay)) * 100, 
+        2
+    ) AS on_time_percentage
+FROM 
+    nyc_airports a
+JOIN 
+    flights_weather fw 
+ON 
+    a.faa = fw.origin
+GROUP BY 
+    a.faa, 
+    a.name, 
+    is_dry
+ORDER BY 
+    a.faa, 
+    is_dry
+LIMIT 10;
+
+```
 
 ### 4.3
 
@@ -298,9 +356,7 @@ The Code tab in the GitHub repository showing one collaborator’s commit of add
 The Code tab in the GitHub repository showing the final commit, when finalizing your work, Step 2 of this section.
 
 
-# We need to use rank
-# use case
-# use group by
+
 
 
 
