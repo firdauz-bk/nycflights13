@@ -281,7 +281,16 @@ LIMIT 10;
 ## Task 4: 
 
 ### 4.1
-
+```{sql}
+#| connection: con_nycflights13
+SELECT COUNT(*)
+FROM (
+    SELECT DISTINCT f.origin, f.time_hour
+    FROM flights f
+    LEFT JOIN weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
+    WHERE w.origin IS NULL AND w.time_hour IS NULL
+);
+```
 ### 4.2
 ```{sql}
 #| connection: con_nycflights13
@@ -339,6 +348,36 @@ LIMIT 10;
 ```
 
 ### 4.3
+```{sql}
+#| connection: con_nycflights13
+
+WITH low_visibility_delay AS (
+    SELECT 
+        f.origin AS airport_code,
+        a.name AS airport_name,
+        AVG(f.dep_delay) AS mean_departure_delay
+    FROM 
+        flights f
+    JOIN 
+        weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
+    JOIN 
+        airports a ON f.origin = a.faa
+    WHERE 
+        w.visib < 1 AND
+        f.origin IN ('JFK', 'LGA', 'EWR')
+    GROUP BY 
+        f.origin, a.name
+)
+SELECT 
+    airport_code,
+    airport_name,
+    ROUND(mean_departure_delay, 2) AS mean_departure_delay,
+    RANK() OVER (ORDER BY mean_departure_delay) AS rank
+FROM 
+    low_visibility_delay
+ORDER BY 
+    rank, airport_code;
+```
 
 ### 4.4
 
