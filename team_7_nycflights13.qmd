@@ -419,13 +419,181 @@ Sort the results first by rank, then alphabetically by manufacturer, and, lastly
 
 ## Task 4: 
 
-### 4.1
+### 4.1 How many combinations of origin airport and time_hour are present in the flights table but absent from the weather table? Provide your answer in the form of a table with one row and one column.
+```{sql}
+#| connection: con_nycflights13
+SELECT COUNT(*)
+FROM (
+    SELECT DISTINCT f.origin, f.time_hour
+    FROM flights f
+    LEFT JOIN weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
+    WHERE w.origin IS NULL AND w.time_hour IS NULL
+);
+```
 
-### 4.2
+### 4.2 
+What is the percentage of on-time departures from each of New York City’s main airports under dry conditions (i.e., precip = 0) and under wet conditions? Include columns for the following attributes:
 
+Three-letter airport code
+
+Airport name
+
+is_dry: Boolean values indicating zero precipitation.
+
+Percentage of on-time departures, rounded to two decimal places
+```{sql}
+#| connection: con_nycflights13
+WITH nyc_airports AS (
+    SELECT 
+        faa, 
+        name
+    FROM 
+        airports
+    WHERE 
+        faa IN ('JFK', 'LGA', 'EWR')
+),
+flights_weather AS (
+    SELECT 
+        f.origin, 
+        f.dep_delay,
+        w.precip
+    FROM 
+        flights f
+    JOIN 
+        weather w 
+    ON 
+        f.origin = w.origin 
+        AND f.year = w.year 
+        AND f.month = w.month 
+        AND f.day = w.day 
+        AND f.hour = w.hour
+)
+SELECT 
+    a.faa AS airport_code,
+    a.name AS airport_name,
+    CASE 
+        WHEN fw.precip = 0 THEN TRUE 
+        ELSE FALSE 
+    END AS is_dry,
+    ROUND(
+        (SUM(CASE WHEN fw.dep_delay <= 0 THEN 1 ELSE 0 END)::numeric / COUNT(fw.dep_delay)) * 100, 
+        2
+    ) AS on_time_percentage
+FROM 
+    nyc_airports a
+JOIN 
+    flights_weather fw 
+ON 
+    a.faa = fw.origin
+GROUP BY 
+    a.faa, 
+    a.name, 
+    is_dry
+ORDER BY 
+    a.faa, 
+    is_dry
+LIMIT 10;
+
+```
 ### 4.3
+How do New York City’s main airports rank in terms of mean departure delay when the visibility was less than one mile? Include columns for the following attributes:
 
+Three-letter airport code
+
+Airport name
+
+Mean departure delay in minutes, rounded to two decimal places
+
+Rank
+
+Sort the results first by rank (starting with the smallest delay) and, then, alphabetically by the 
+
+three-letter airport code.
+```{sql}
+#| connection: con_nycflights13
+
+WITH low_visibility_delay AS (
+    SELECT 
+        f.origin AS airport_code,
+        a.name AS airport_name,
+        AVG(f.dep_delay) AS mean_departure_delay
+    FROM 
+        flights f
+    JOIN 
+        weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
+    JOIN 
+        airports a ON f.origin = a.faa
+    WHERE 
+        w.visib < 1 AND
+        f.origin IN ('JFK', 'LGA', 'EWR')
+    GROUP BY 
+        f.origin, a.name
+)
+SELECT 
+    airport_code,
+    airport_name,
+    ROUND(mean_departure_delay, 2) AS mean_departure_delay,
+    RANK() OVER (ORDER BY mean_departure_delay) AS rank
+FROM 
+    low_visibility_delay
+ORDER BY 
+    rank, airport_code;
+```
 ### 4.4
+What is the correlation coefficient between the mean temperature of the day and the mean departure delay on that day? Round the value to two decimal places. Provide the answer in the form of a table with one row and one column. Hint: calculate the AVG() of temperature for each day in 2013, and then the AVG() of departure delay for each day in 2013. After that, calculate the CORR() between these two sequences (of length 365 or less). Remember to INNER JOIN flights and weather.
+```{sql}
+#| connection: con_nycflights13
+SELECT ROUND(CORR(avg_temp, avg_dep_delay):: numeric, 2) AS correlation_coefficient
+FROM (
+    SELECT f.year, f.month, f.day,
+           AVG(w.temp) AS avg_temp,
+           AVG(f.dep_delay) AS avg_dep_delay
+    FROM flights AS f
+    INNER JOIN weather AS w ON f.origin = w.origin
+                             AND f.year = w.year
+                             AND f.month = w.month
+                             AND f.day = w.day
+    WHERE f.year = 2013
+    GROUP BY f.year, f.month, f.day
+) AS subquery
+LIMIT 4;
+
+```
+
+### 4.5
+Burlington, Vermont, lies almost exactly to the north of New York City. Is the mean flight time to Burlington International Airport (BTV) shorter when the wind blows from the south (between 135 and 225 degrees) compared to when it blows from the north (between 0 and 45 degrees as well as between 315 and 360 degrees)? Provide your answer in the form of a table with one row each for north and south winds, and two columns, named wind_direction and mean_air_time. Hint: CASE expression.
+```{sql}
+#| connection: con_nycflights13
+WITH burlington_flights AS (
+    SELECT
+        f.origin,
+        f.air_time,
+        CASE
+            WHEN w.wind_dir BETWEEN 135 AND 225 THEN 'South'
+            WHEN w.wind_dir BETWEEN 0 AND 45 OR w.wind_dir BETWEEN 315 AND 360 THEN 'North'
+            ELSE NULL
+        END AS wind_direction
+    FROM
+        flights f
+    JOIN
+        weather w ON f.origin = w.origin
+    WHERE
+        f.dest = 'BTV'
+)
+SELECT
+    wind_direction,
+    AVG(air_time) AS mean_air_time
+FROM
+    burlington_flights
+WHERE
+    wind_direction IS NOT NULL
+GROUP BY
+    wind_direction
+    
+LIMIT 10;
+
+
+```
 
 ## Task 5: Finalising the submission
 
@@ -440,10 +608,6 @@ The Code tab in the GitHub repository showing one collaborator’s commit of add
 
 The Code tab in the GitHub repository showing the final commit, when finalizing your work, Step 2 of this section.
 
-
-# We need to use rank
-# use case
-# use group by
 
 
 
