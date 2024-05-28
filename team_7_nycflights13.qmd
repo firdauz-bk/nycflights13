@@ -1,5 +1,5 @@
 ---
-title: "nycflights13 lab week 4 team 7"
+title: "NYCFlights13 lab week 4 team 7"
 author: "Chan Jit Lin, Firdauz B K, Celeste Tan, Lin Xiang Hong, Jonathan Chua"
 date: "2024-05-28"
 format:
@@ -92,8 +92,8 @@ SELECT
     num_destinations,
     rank
 FROM ranked_airports
-ORDER BY rank, airport_code
-LIMIT 4;
+ORDER BY rank, airport_code;
+
 ```
 ### 2.2
 Which ten destination airports are served by the greatest number of seats from New York City? If airports are tied for the tenth place, ensure that all tied airports are included in the output. Include columns for the following attributes:
@@ -132,8 +132,7 @@ SELECT
 FROM ranked_destinations rd
 INNER JOIN airports a ON rd.airport_code = a.faa
 WHERE rd.rank <= 10
-ORDER BY rd.rank, rd.airport_code
-LIMIT 4;
+ORDER BY rd.rank, rd.airport_code;
 
 ```
 
@@ -181,9 +180,7 @@ FROM
     mean_dep_delay
 ORDER BY
     rank,
-    airport_code
-    
-LIMIT 4;
+    airport_code;
 
 
 ```
@@ -222,9 +219,8 @@ SELECT
 FROM
     on_time_stats
 ORDER BY
-    hour_of_day
-    
-LIMIT 4;
+    hour_of_day;
+
 
 ```
 ### 2.5
@@ -262,158 +258,174 @@ JOIN
 ON
     pac.tailnum = p.tailnum
 ORDER BY
-    p.tailnum
-LIMIT 10;
+    p.tailnum;
+
 
 ```
 
 
-## Task 3: 
+## Task 3: Exploring Flights from New York City to Chicago
 
-### 3.1
+### 3.1 Which airport names in the airports table contain the string 'Chicago'? Create a view named chicago_airports to save the result, including only the faa and name columns.
 
-### 3.2
+```{sql}
+#| connection: con_nycflights13
 
-### 3.3
+WITH chicago_airports AS (
+    SELECT faa, name
+    FROM airports
+    WHERE name LIKE '%Chicago%'
+)
+SELECT *
+FROM chicago_airports;
+```
 
-### 3.4
+### 3.2 How many flights departed from New York City to each of Chicago’s airports? Include columns for the following attributes:
+
+-   Three-letter code of the destination airport
+-   Name of the destination airport
+-   Number of flights
+-   Rank
+
+```{sql}
+#| connection=con_nycflights13
+
+WITH ChicagoFlights AS (
+    SELECT 
+        f.dest AS ThreeLetterCodeofDestination,
+        a.name AS DestinationAirportName,
+        COUNT(*) AS NumberOfFlights
+    FROM 
+        flights f
+    JOIN 
+        airports a ON f.dest = a.faa
+    WHERE 
+        f.origin IN ('JFK', 'LGA', 'EWR')  -- Airports in NYC
+        AND a.name LIKE '%Chicago%'        -- Destinations in Chicago
+    GROUP BY 
+        f.dest, a.name
+)
+SELECT 
+    ThreeLetterCodeofDestination,
+    DestinationAirportName,
+    NumberOfFlights,
+    RANK() OVER (ORDER BY NumberOfFlights DESC, ThreeLetterCodeofDestination ASC) AS Rank
+FROM 
+    ChicagoFlights
+ORDER BY 
+    Rank, 
+    ThreeLetterCodeofDestination;
+
+```
+
+Sort the results first by rank and, then, alphabetically by the three-letter code of the destination airport.
+
+### 3.3 Which airlines operated flights from New York City to Chicago? Include columns for the following attributes:
+
+- Two-letter airline code
+- Airline name
+- Number of flights
+- Rank
+```{sql}
+#| connection=con_nycflights13
+#| 
+SELECT 
+    AirlineCode,
+    AirlineName,
+    NumberOfFlights,
+    RANK() OVER (ORDER BY NumberOfFlights DESC) AS Rank
+FROM 
+    (
+        SELECT 
+            f.carrier AS AirlineCode,
+            a.name AS AirlineName,
+            COUNT(*) AS NumberOfFlights
+        FROM 
+            flights f
+        JOIN 
+            airlines a ON f.carrier = a.carrier
+        JOIN
+            airports ap ON f.dest = ap.faa
+        WHERE 
+            f.origin IN ('JFK', 'LGA', 'EWR')  -- Airports in NYC
+            AND ap.name LIKE '%Chicago%'       -- Airports in Chicago
+        GROUP BY 
+            f.carrier, a.name
+    ) AS NYCtoChicagoAirlines
+ORDER BY 
+    Rank, 
+    AirlineCode;
+
+
+```
+
+Sort the results first by rank and, then, alphabetically by the two-letter airline code.
+
+### 3.4 Among airlines that operated a minimum of 100 flights from New York to Chicago, what are the percentages of on-time arrivals? Include columns for the following attributes:
+
+- Manufacturer
+- Model
+- Number of flights
+- Rank
+
+```{sql}
+#| connection = con_nycflights13
+WITH FlightData AS (
+    SELECT
+        p.manufacturer,
+        p.model,
+        f.dest,
+        COUNT(*) AS NumberOfFlights,
+        SUM(CASE WHEN f.arr_delay <= 0 THEN 1 ELSE 0 END) AS OnTimeArrivals
+    FROM
+        flights f
+    JOIN
+        planes p ON f.tailnum = p.tailnum
+    JOIN
+        airports a ON f.dest = a.faa
+    WHERE
+        f.origin IN ('JFK', 'LGA', 'EWR')  -- Airports in NYC
+        AND a.name LIKE '%Chicago%'       -- Airports in Chicago
+    GROUP BY
+        p.manufacturer, p.model, f.dest
+    HAVING
+        COUNT(*) >= 100                   -- At least 100 flights
+),
+Percentages AS (
+    SELECT
+        manufacturer,
+        model,
+        NumberOfFlights,
+        (CAST(OnTimeArrivals AS FLOAT) / NumberOfFlights * 100) AS OnTimePercentage
+    FROM
+        FlightData
+)
+SELECT
+    manufacturer,
+    model,
+    NumberOfFlights,
+    OnTimePercentage,
+    RANK() OVER (ORDER BY OnTimePercentage DESC, manufacturer, model) AS Rank
+FROM
+    Percentages
+ORDER BY
+    Rank,
+    manufacturer,
+    model;
+```
+Sort the results first by rank, then alphabetically by manufacturer, and, lastly, by model.
+
+### 5. Was at least one departure from New York City to Chicago scheduled every day in 2013? Provide your answer in the form of a table with one row and one column, containing the value TRUE or FALSE.
 
 ## Task 4: 
 
 ### 4.1
-```{sql}
-#| connection: con_nycflights13
-SELECT COUNT(*)
-FROM (
-    SELECT DISTINCT f.origin, f.time_hour
-    FROM flights f
-    LEFT JOIN weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
-    WHERE w.origin IS NULL AND w.time_hour IS NULL
-);
-```
-### 4.2
-```{sql}
-#| connection: con_nycflights13
-WITH nyc_airports AS (
-    SELECT 
-        faa, 
-        name
-    FROM 
-        airports
-    WHERE 
-        faa IN ('JFK', 'LGA', 'EWR')
-),
-flights_weather AS (
-    SELECT 
-        f.origin, 
-        f.dep_delay,
-        w.precip
-    FROM 
-        flights f
-    JOIN 
-        weather w 
-    ON 
-        f.origin = w.origin 
-        AND f.year = w.year 
-        AND f.month = w.month 
-        AND f.day = w.day 
-        AND f.hour = w.hour
-)
-SELECT 
-    a.faa AS airport_code,
-    a.name AS airport_name,
-    CASE 
-        WHEN fw.precip = 0 THEN TRUE 
-        ELSE FALSE 
-    END AS is_dry,
-    ROUND(
-        (SUM(CASE WHEN fw.dep_delay <= 0 THEN 1 ELSE 0 END)::numeric / COUNT(fw.dep_delay)) * 100, 
-        2
-    ) AS on_time_percentage
-FROM 
-    nyc_airports a
-JOIN 
-    flights_weather fw 
-ON 
-    a.faa = fw.origin
-GROUP BY 
-    a.faa, 
-    a.name, 
-    is_dry
-ORDER BY 
-    a.faa, 
-    is_dry
-LIMIT 10;
 
-```
+### 4.2
 
 ### 4.3
-```{sql}
-#| connection: con_nycflights13
-
-WITH low_visibility_delay AS (
-    SELECT 
-        f.origin AS airport_code,
-        a.name AS airport_name,
-        AVG(f.dep_delay) AS mean_departure_delay
-    FROM 
-        flights f
-    JOIN 
-        weather w ON f.origin = w.origin AND f.time_hour = w.time_hour
-    JOIN 
-        airports a ON f.origin = a.faa
-    WHERE 
-        w.visib < 1 AND
-        f.origin IN ('JFK', 'LGA', 'EWR')
-    GROUP BY 
-        f.origin, a.name
-)
-SELECT 
-    airport_code,
-    airport_name,
-    ROUND(mean_departure_delay, 2) AS mean_departure_delay,
-    RANK() OVER (ORDER BY mean_departure_delay) AS rank
-FROM 
-    low_visibility_delay
-ORDER BY 
-    rank, airport_code;
-```
 
 ### 4.4
-
-### 4.5
-```{sql}
-#| connection: con_nycflights13
-WITH burlington_flights AS (
-    SELECT
-        f.origin,
-        f.air_time,
-        CASE
-            WHEN w.wind_dir BETWEEN 135 AND 225 THEN 'South'
-            WHEN w.wind_dir BETWEEN 0 AND 45 OR w.wind_dir BETWEEN 315 AND 360 THEN 'North'
-            ELSE NULL
-        END AS wind_direction
-    FROM
-        flights f
-    JOIN
-        weather w ON f.origin = w.origin
-    WHERE
-        f.dest = 'BTV'
-)
-SELECT
-    wind_direction,
-    AVG(air_time) AS mean_air_time
-FROM
-    burlington_flights
-WHERE
-    wind_direction IS NOT NULL
-GROUP BY
-    wind_direction
-    
-LIMIT 10;
-
-
-```
 
 ## Task 5: Finalising the submission
 
@@ -429,7 +441,9 @@ The Code tab in the GitHub repository showing one collaborator’s commit of add
 The Code tab in the GitHub repository showing the final commit, when finalizing your work, Step 2 of this section.
 
 
-
+# We need to use rank
+# use case
+# use group by
 
 
 
