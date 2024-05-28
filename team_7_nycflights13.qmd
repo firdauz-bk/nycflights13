@@ -8,8 +8,8 @@ format:
     highlight: zenburn
     theme: spacelab
     embed-resources: true
-  
 ---
+
 ```{r}
 #| label: setup
 #| include: false
@@ -18,13 +18,16 @@ library(DBI)
 # database is called "nycflights13" in reality
 con_nycflights13 <- DBI::dbConnect(odbc::odbc(), dsn = "nycflights13")
 ```
-## Task 1
-### 1.1 Github  repo named [nycflights13](https://github.com/firdauz-bk/nycflights13)
 
-### 1.2 Insert Screenshot
+## Task 1
+
+### 1. Github Repo Named [nycflights13](https://github.com/firdauz-bk/nycflights13)
+
+### 1.1 Insert Screenshot of Collaborators
+
 ![screenshot](images/ss_q1p1.jpg)
 
-### 1.3 flights db connected
+### 1.2 Insert Screenshot of Repository (Code Subsection) ![screenshot](images/ss_q1p2.jpg)
 
 ### 1.4 SQL Code:
 
@@ -50,16 +53,13 @@ CSV HEADER;
 
 ## Task 2: Aggregating Information from the flights Table
 
-### 2.1 
-What are the rankings of New York City’s main airports in terms of the total number of destinations served? Include columns for the following attributes:
+### 2.1 What are the rankings of New York City’s main airports in terms of the total number of destinations served? Include columns for the following attributes:
 
-Three-letter airport code
+-   Three-letter airport code
+-   Airport name
+-   Number of destinations
+-   Rank
 
-Airport name
-
-Number of destinations
-
-Rank
 ```{sql}
 #| connection: con_nycflights13
 
@@ -95,16 +95,14 @@ FROM ranked_airports
 ORDER BY rank, airport_code;
 
 ```
-### 2.2
-Which ten destination airports are served by the greatest number of seats from New York City? If airports are tied for the tenth place, ensure that all tied airports are included in the output. Include columns for the following attributes:
 
-Three-letter airport code
+### 2.2 Which ten destination airports are served by the greatest number of seats from New York City? If airports are tied for the tenth place, ensure that all tied airports are included in the output. Include columns for the following attributes:
 
-Airport name
+-   Three-letter airport code
+-   Airport name
+-   Number of seats
+-   Rank
 
-Number of seats
-
-Rank
 ```{sql}
 #| connection: con_nycflights13
 #| include : true
@@ -136,16 +134,13 @@ ORDER BY rd.rank, rd.airport_code;
 
 ```
 
-### 2.3
-What are the rankings of New York City’s main airports in terms of mean departure delay (highest delay first), weighting each flight equally when taking the average? Include columns for the following attributes:
+### 2.3 What are the rankings of New York City’s main airports in terms of mean departure delay (highest delay first), weighting each flight equally when taking the average? Include columns for the following attributes:
 
-Three-letter airport code
+-   Three-letter airport code
+-   Airport name
+-   Mean departure delay in minutes, rounded to two decimal places
+-   Rank
 
-Airport name
-
-Mean departure delay in minutes, rounded to two decimal places
-
-Rank
 ```{sql}
 #| connection: con_nycflights13
 WITH nyc_airports AS (
@@ -185,12 +180,11 @@ ORDER BY
 
 ```
 
-### 2.4
-Tabulate the percentage of on-time departures for each hour of the day when the plane is scheduled to leave. Include columns for the following attributes:
+### 2.4 Tabulate the percentage of on-time departures for each hour of the day when the plane is scheduled to leave. Include columns for the following attributes:
 
-Hour of the day
+-   Hour of the day
+-   Percentage of on-time departures, rounded to two decimal places
 
-Percentage of on-time departures, rounded to two decimal places
 ```{sql}
 #| connection: con_nycflights13
 WITH departure_info AS (
@@ -223,16 +217,14 @@ ORDER BY
 
 
 ```
-### 2.5
-Which planes, identified by their tail number, were operated by more than one airline? Include columns for the following attributes:
 
-Tail number
+### 2.5 Which planes, identified by their tail number, were operated by more than one airline? Include columns for the following attributes:
 
-Manufacturer
+-   Tail number
+-   Manufacturer
+-   Model
+-   Number of airlines (must be greater than 1)
 
-Model
-
-Number of airlines (must be greater than 1)
 ```{sql}
 #| connection: con_nycflights13
 WITH plane_airline_count AS (
@@ -262,7 +254,6 @@ ORDER BY
 
 
 ```
-
 
 ## Task 3: Exploring Flights from New York City to Chicago
 
@@ -322,10 +313,11 @@ Sort the results first by rank and, then, alphabetically by the three-letter cod
 
 ### 3.3 Which airlines operated flights from New York City to Chicago? Include columns for the following attributes:
 
-- Two-letter airline code
-- Airline name
-- Number of flights
-- Rank
+-   Two-letter airline code
+-   Airline name
+-   Number of flights
+-   Rank
+
 ```{sql}
 #| connection=con_nycflights13
 #| 
@@ -363,10 +355,10 @@ Sort the results first by rank and, then, alphabetically by the two-letter airli
 
 ### 3.4 Among airlines that operated a minimum of 100 flights from New York to Chicago, what are the percentages of on-time arrivals? Include columns for the following attributes:
 
-- Manufacturer
-- Model
-- Number of flights
-- Rank
+-   Manufacturer
+-   Model
+-   Number of flights
+-   Rank
 
 ```{sql}
 #| connection = con_nycflights13
@@ -413,13 +405,40 @@ ORDER BY
     manufacturer,
     model;
 ```
+
 Sort the results first by rank, then alphabetically by manufacturer, and, lastly, by model.
 
 ### 5. Was at least one departure from New York City to Chicago scheduled every day in 2013? Provide your answer in the form of a table with one row and one column, containing the value TRUE or FALSE.
 
-## Task 4: 
+```{sql}
+#| connection = con_nycflights13
+
+SELECT 
+    CASE 
+        WHEN COUNT(scheduled_dates.day) = 0 THEN 'TRUE' 
+        ELSE 'FALSE' 
+    END AS at_least_one_departure
+FROM (
+    SELECT 
+        generate_series('2013-01-01'::date, '2013-12-31'::date, '1 day') AS day
+) AS all_dates
+LEFT JOIN (
+    SELECT 
+        DISTINCT DATE(time_hour) AS day
+    FROM flights
+    WHERE dest = 'ORD' AND origin IN ('JFK', 'LGA', 'EWR')
+) AS scheduled_dates
+ON all_dates.day = scheduled_dates.day
+WHERE scheduled_dates.day IS NULL;
+
+
+```
+
+
+## Task 4: Uncovering Associations between Weather and Flight Operations
 
 ### 4.1 How many combinations of origin airport and time_hour are present in the flights table but absent from the weather table? Provide your answer in the form of a table with one row and one column.
+
 ```{sql}
 #| connection: con_nycflights13
 SELECT COUNT(*)
@@ -431,16 +450,13 @@ FROM (
 );
 ```
 
-### 4.2 
-What is the percentage of on-time departures from each of New York City’s main airports under dry conditions (i.e., precip = 0) and under wet conditions? Include columns for the following attributes:
+### 4.2 What is the percentage of on-time departures from each of New York City’s main airports under dry conditions (i.e., precip = 0) and under wet conditions? Include columns for the following attributes:
 
-Three-letter airport code
+- Three-letter airport code
+- Airport name
+- is_dry: Boolean values indicating zero precipitation.
+- Percentage of on-time departures, rounded to two decimal places
 
-Airport name
-
-is_dry: Boolean values indicating zero precipitation.
-
-Percentage of on-time departures, rounded to two decimal places
 ```{sql}
 #| connection: con_nycflights13
 WITH nyc_airports AS (
@@ -495,20 +511,16 @@ ORDER BY
 LIMIT 10;
 
 ```
-### 4.3
-How do New York City’s main airports rank in terms of mean departure delay when the visibility was less than one mile? Include columns for the following attributes:
 
-Three-letter airport code
+### 4.3 How do New York City’s main airports rank in terms of mean departure delay when the visibility was less than one mile? Include columns for the following attributes:
 
-Airport name
+- Three-letter airport code
+- Airport name
+- Mean departure delay in minutes, rounded to two decimal places
+- Rank
+- Sort the results first by rank (starting with the smallest delay) and, then, alphabetically by the
+- three-letter airport code.
 
-Mean departure delay in minutes, rounded to two decimal places
-
-Rank
-
-Sort the results first by rank (starting with the smallest delay) and, then, alphabetically by the 
-
-three-letter airport code.
 ```{sql}
 #| connection: con_nycflights13
 
@@ -539,8 +551,9 @@ FROM
 ORDER BY 
     rank, airport_code;
 ```
-### 4.4
-What is the correlation coefficient between the mean temperature of the day and the mean departure delay on that day? Round the value to two decimal places. Provide the answer in the form of a table with one row and one column. Hint: calculate the AVG() of temperature for each day in 2013, and then the AVG() of departure delay for each day in 2013. After that, calculate the CORR() between these two sequences (of length 365 or less). Remember to INNER JOIN flights and weather.
+
+### 4.4 What is the correlation coefficient between the mean temperature of the day and the mean departure delay on that day? Round the value to two decimal places. Provide the answer in the form of a table with one row and one column. Hint: calculate the AVG() of temperature for each day in 2013, and then the AVG() of departure delay for each day in 2013. After that, calculate the CORR() between these two sequences (of length 365 or less). Remember to INNER JOIN flights and weather.
+
 ```{sql}
 #| connection: con_nycflights13
 SELECT ROUND(CORR(avg_temp, avg_dep_delay):: numeric, 2) AS correlation_coefficient
@@ -560,8 +573,8 @@ LIMIT 4;
 
 ```
 
-### 4.5
-Burlington, Vermont, lies almost exactly to the north of New York City. Is the mean flight time to Burlington International Airport (BTV) shorter when the wind blows from the south (between 135 and 225 degrees) compared to when it blows from the north (between 0 and 45 degrees as well as between 315 and 360 degrees)? Provide your answer in the form of a table with one row each for north and south winds, and two columns, named wind_direction and mean_air_time. Hint: CASE expression.
+### 4.5 Burlington, Vermont, lies almost exactly to the north of New York City. Is the mean flight time to Burlington International Airport (BTV) shorter when the wind blows from the south (between 135 and 225 degrees) compared to when it blows from the north (between 0 and 45 degrees as well as between 315 and 360 degrees)? Provide your answer in the form of a table with one row each for north and south winds, and two columns, named wind_direction and mean_air_time. Hint: CASE expression.
+
 ```{sql}
 #| connection: con_nycflights13
 WITH burlington_flights AS (
@@ -594,20 +607,5 @@ LIMIT 10;
 
 
 ```
-
-## Task 5: Finalising the submission
-
-### 5.1 Commit and push changes to github
-
-### 5.2 As a team, capture a screenshot of the repository owner’s GitHub project Code page, displaying the URL bar, the nycflights13 data folder, screenshot images, and most importantly, the team_XX_nycflights13.qmd file and the rendered team_XX_nycflights13.html file. [screenshot]()
-
-### 5.3 Submit zip file
-The repository owner’s Manage access page of the GitHub repository, Subtask 1.1.
-
-The Code tab in the GitHub repository showing one collaborator’s commit of adding the nycflights13 folder, Subtask 1.2.
-
-The Code tab in the GitHub repository showing the final commit, when finalizing your work, Step 2 of this section.
-
-
 
 
